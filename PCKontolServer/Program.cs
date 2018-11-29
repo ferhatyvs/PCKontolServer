@@ -10,6 +10,8 @@ namespace PCKontolServer
     {
         static void Main(string[] args)
         {
+            Server.StartServer(5678);
+            Server.Listen();
         }
     }
 }
