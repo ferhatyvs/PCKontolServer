@@ -79,8 +79,12 @@ namespace PCKontolServer
                     {
                         Console.WriteLine("Baglanti tamamlandi, Veriler bekleniyor.");
                         var client = clientTask.Result;
+                        Random pinkodu = new Random();
                         string message = "";
-
+                        //pkontrol:
+                        int pin = pinkodu.Next(1000,9999);
+                        Boolean a=true;
+                        Console.WriteLine("Pin kodu =" + pin);
                         while (message != null && !message.StartsWith("quit"))
                         {
                             byte[] data = Encoding.ASCII.GetBytes("Send next data: [enter 'quit' to terminate] ");
@@ -91,21 +95,36 @@ namespace PCKontolServer
 
                             message = Encoding.ASCII.GetString(buffer);
                             Console.WriteLine(message);
-                            if (message.StartsWith("volumeup"))
+                            if (a)
                             {
-                                tus.VolUp();
+                                if(pin == Int32.Parse(message.Substring(0,4)))
+                                {
+                                    a=false;
+                                }
+                                else
+                                {
+                                    pin=pinkodu.Next(1000,9999);
+                                    Console.WriteLine("Pin kodu =" + pin);
+                                }
                             }
-                            else if (message.StartsWith("volumedown"))
+                            else
                             {
-                                tus.VolDown();
-                            }
-                            else if (message.StartsWith("mute"))
-                            {
-                                tus.Mute();
-                            }
-                            else if (message.StartsWith("ppause"))
-                            {
-                                tus.PPause();
+                                if (message.StartsWith("volumeup"))
+                                {
+                                    tus.VolUp();
+                                }
+                                else if (message.StartsWith("volumedown"))
+                                {
+                                    tus.VolDown();
+                                }
+                                else if (message.StartsWith("mute"))
+                                {
+                                    tus.Mute();
+                                }
+                                else if (message.StartsWith("ppause"))
+                                {
+                                    tus.PPause();
+                                }
                             }
                         }
                         Console.WriteLine("Closing connection.");
